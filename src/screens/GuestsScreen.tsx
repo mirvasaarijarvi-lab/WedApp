@@ -64,6 +64,11 @@ export default function GuestsScreen() {
           marginBottom: spacing.md,
           gap: spacing.xs,
         },
+        cardHeader: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        },
         name: {
           fontFamily: typography.bodyMedium,
           color: colors.text,
@@ -240,7 +245,10 @@ export default function GuestsScreen() {
         onRefresh={load}
         renderItem={({ item }) => (
           <Card style={styles.card}>
-            <Text style={styles.name}>{item.name}</Text>
+            <View style={styles.cardHeader}>
+              <Text style={styles.name}>{item.name}</Text>
+              <FeatureIcon name="guests" size={28} />
+            </View>
             {!!item.email && <Text style={styles.meta}>{item.email}</Text>}
             {!!item.phone && <Text style={styles.meta}>{item.phone}</Text>}
             <View style={styles.row}>
@@ -258,7 +266,7 @@ export default function GuestsScreen() {
           <EmptyState
             title="No guests yet"
             description="Start adding guests and track RSVPs with a calm, elegant view."
-            illustration="calendar"
+          illustration="bouquet"
           />
         }
       />

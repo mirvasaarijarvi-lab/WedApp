@@ -51,6 +51,17 @@ export default function DashboardScreen() {
           flexDirection: 'row',
           gap: spacing.lg,
         },
+        sectionHeader: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginTop: spacing.md,
+        },
+        sectionMeta: {
+          fontFamily: typography.body,
+          color: colors.muted,
+          fontSize: 12,
+        },
         statCard: {
           flex: 1,
           gap: spacing.sm,
@@ -178,7 +189,10 @@ export default function DashboardScreen() {
         </Card>
       </View>
 
-      <SectionTitle style={styles.sectionTitle}>Today's Focus</SectionTitle>
+      <View style={styles.sectionHeader}>
+        <SectionTitle>Today's Focus</SectionTitle>
+        <Text style={styles.sectionMeta}>3 priorities</Text>
+      </View>
       <Card>
         <View style={styles.focusItem}>
           <FeatureIcon name="vendors" size={32} />
@@ -203,7 +217,10 @@ export default function DashboardScreen() {
         </View>
       </Card>
 
-      <SectionTitle style={styles.sectionTitle}>Upcoming Event</SectionTitle>
+      <View style={styles.sectionHeader}>
+        <SectionTitle>Upcoming Event</SectionTitle>
+        <Text style={styles.sectionMeta}>Next 7 days</Text>
+      </View>
       <Card>
         <Text style={styles.eventTitle}>Ceremony & Reception</Text>
         <Text style={styles.eventMeta}>Saturday, June 14 · 4:00 PM · Garden Terrace</Text>
@@ -213,6 +230,13 @@ export default function DashboardScreen() {
         <View style={styles.eventActions}>
           <AppButton title="View timeline" variant="secondary" />
           <AppButton title="Send update" variant="outline" />
+        </View>
+      </Card>
+
+      <Card>
+        <View style={styles.eventActions}>
+          <AppButton title="Open guest list" variant="secondary" />
+          <AppButton title="Add task" variant="outline" />
         </View>
       </Card>
 

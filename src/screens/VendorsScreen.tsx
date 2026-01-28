@@ -35,6 +35,11 @@ export default function VendorsScreen() {
           marginBottom: spacing.md,
           gap: spacing.xs,
         },
+        cardHeader: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        },
         name: {
           fontFamily: typography.bodyMedium,
           color: colors.text,
@@ -69,7 +74,10 @@ export default function VendorsScreen() {
       />
 
       <Card style={styles.card}>
-        <Text style={styles.name}>Garden Terrace Venue</Text>
+        <View style={styles.cardHeader}>
+          <Text style={styles.name}>Garden Terrace Venue</Text>
+          <FeatureIcon name="vendors" size={28} />
+        </View>
         <Text style={styles.meta}>Venue · Confirmed</Text>
         <View style={styles.actions}>
           <AppButton title="View details" variant="secondary" />
@@ -78,7 +86,10 @@ export default function VendorsScreen() {
       </Card>
 
       <Card style={styles.card}>
-        <Text style={styles.name}>Luma Floral Studio</Text>
+        <View style={styles.cardHeader}>
+          <Text style={styles.name}>Luma Floral Studio</Text>
+          <FeatureIcon name="vendors" size={28} />
+        </View>
         <Text style={styles.meta}>Florist · Quote sent</Text>
         <View style={styles.actions}>
           <AppButton title="Review quote" variant="secondary" />

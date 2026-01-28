@@ -68,6 +68,12 @@ export default function TasksScreen() {
           marginBottom: spacing.md,
           gap: spacing.sm,
         },
+        cardHeader: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: spacing.sm,
+        },
         taskHeader: {
           flexDirection: 'row',
           justifyContent: 'space-between',
@@ -245,9 +251,12 @@ export default function TasksScreen() {
         onRefresh={load}
         renderItem={({ item }) => (
           <Card style={styles.card}>
-            <View style={styles.taskHeader}>
-              <Text style={styles.taskTitle}>{item.title}</Text>
-              <Badge label={item.completed ? 'Ready' : 'Open'} tone={item.completed ? 'primary' : 'muted'} />
+            <View style={styles.cardHeader}>
+              <View style={styles.taskHeader}>
+                <Text style={styles.taskTitle}>{item.title}</Text>
+                <Badge label={item.completed ? 'Ready' : 'Open'} tone={item.completed ? 'primary' : 'muted'} />
+              </View>
+              <FeatureIcon name="tasks" size={28} />
             </View>
             <Text style={styles.taskMeta}>
               {item.assignee_kind ? `Assigned to ${item.assignee_kind}` : 'Unassigned'}
