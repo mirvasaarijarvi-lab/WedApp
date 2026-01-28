@@ -6,6 +6,12 @@ export default ({ config }: { config: ExpoConfig }) => ({
   name: 'FirstWedAppMobile',
   slug: 'first-wed-app-mobile',
   owner: 'mimmisaarijarvi',
+  android: {
+    package: 'com.mimmisaarijarvi.firstwedapp',
+  },
+  ios: {
+    bundleIdentifier: 'com.mimmisaarijarvi.firstwedapp',
+  },
   extra: {
     supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL,
     supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
