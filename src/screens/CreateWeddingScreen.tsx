@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
 import { supabase } from '../lib/supabase';
 import { useWedding } from '../lib/WeddingContext';
@@ -10,6 +10,17 @@ export default function CreateWeddingScreen() {
   const [date, setDate] = useState('');
   const [venue, setVenue] = useState('');
   const [loading, setLoading] = useState(false);
+  const [debug, setDebug] = useState<{ userId?: string | null; email?: string | null; role?: string | null }>({});
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setDebug({
+        userId: data.session?.user?.id ?? null,
+        email: data.session?.user?.email ?? null,
+        role: data.session?.user?.role ?? null,
+      });
+    });
+  }, []);
 
   const parseDateInput = (value: string) => {
     if (!value) return null;
@@ -58,6 +69,12 @@ export default function CreateWeddingScreen() {
   return (
     <View style={{ flex: 1, padding: 24, gap: 12 }}>
       <Text style={{ fontSize: 24, fontWeight: '600' }}>Create wedding</Text>
+      <View style={{ backgroundColor: '#f2f2f2', padding: 12, borderRadius: 8 }}>
+        <Text style={{ fontSize: 12, fontWeight: '600', marginBottom: 4 }}>Debug</Text>
+        <Text style={{ fontSize: 12 }}>User ID: {debug.userId || 'none'}</Text>
+        <Text style={{ fontSize: 12 }}>Email: {debug.email || 'none'}</Text>
+        <Text style={{ fontSize: 12 }}>Role: {debug.role || 'none'}</Text>
+      </View>
       <TextInput placeholder="Title" value={title} onChangeText={setTitle} style={{ borderWidth: 1, borderColor: '#ccc', padding: 12, borderRadius: 8 }} />
       <TextInput
         placeholder="Date (DDMMYYYY)"
