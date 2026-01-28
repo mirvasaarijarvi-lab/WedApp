@@ -1,14 +1,127 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { supabase } from '../lib/supabase';
 import AppButton from '../components/AppButton';
 import Badge from '../components/Badge';
 import BrandMark from '../components/BrandMark';
 import Card from '../components/Card';
+import FeatureIcon from '../components/FeatureIcon';
 import SectionTitle from '../components/SectionTitle';
-import { colors, spacing, typography } from '../theme/tokens';
+import { useTheme } from '../theme/theme';
 
 export default function DashboardScreen() {
+  const { colors, spacing, typography } = useTheme();
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: {
+          flex: 1,
+          backgroundColor: colors.background,
+        },
+        content: {
+          padding: spacing.xl,
+          gap: spacing.xl,
+        },
+        header: {
+          gap: spacing.sm,
+        },
+        headerRow: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: spacing.sm,
+        },
+        kicker: {
+          color: colors.secondary,
+          fontFamily: typography.bodyMedium,
+          textTransform: 'uppercase',
+          letterSpacing: 1,
+          fontSize: 12,
+        },
+        title: {
+          fontFamily: typography.heading,
+          fontSize: 30,
+          color: colors.primary,
+        },
+        subtitle: {
+          fontFamily: typography.body,
+          color: colors.muted,
+          fontSize: 14,
+        },
+        row: {
+          flexDirection: 'row',
+          gap: spacing.lg,
+        },
+        statCard: {
+          flex: 1,
+          gap: spacing.sm,
+        },
+        statHeader: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: spacing.sm,
+        },
+        statLabel: {
+          fontFamily: typography.body,
+          color: colors.muted,
+          fontSize: 12,
+          textTransform: 'uppercase',
+          letterSpacing: 0.8,
+        },
+        statValue: {
+          fontFamily: typography.heading,
+          fontSize: 24,
+          color: colors.text,
+        },
+        sectionTitle: {
+          marginTop: spacing.md,
+        },
+        focusItem: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: spacing.sm,
+          marginBottom: spacing.sm,
+        },
+        focusText: {
+          fontFamily: typography.body,
+          color: colors.text,
+          flex: 1,
+        },
+        eventTitle: {
+          fontFamily: typography.heading,
+          color: colors.primary,
+          fontSize: 20,
+          marginBottom: spacing.xs,
+        },
+        eventMeta: {
+          fontFamily: typography.body,
+          color: colors.muted,
+          fontSize: 13,
+          marginBottom: spacing.md,
+        },
+        eventBody: {
+          fontFamily: typography.body,
+          color: colors.text,
+          lineHeight: 20,
+          marginBottom: spacing.lg,
+        },
+        eventActions: {
+          flexDirection: 'row',
+          gap: spacing.sm,
+          flexWrap: 'wrap',
+        },
+        sampleText: {
+          fontFamily: typography.body,
+          color: colors.muted,
+          marginBottom: spacing.md,
+        },
+        footer: {
+          alignItems: 'center',
+          paddingBottom: spacing.xl,
+        },
+      }),
+    [colors, spacing, typography]
+  );
   const signOut = async () => {
     await supabase.auth.signOut();
   };
@@ -27,12 +140,18 @@ export default function DashboardScreen() {
 
       <View style={styles.row}>
         <Card style={styles.statCard}>
-          <Text style={styles.statLabel}>Guests</Text>
+          <View style={styles.statHeader}>
+            <Text style={styles.statLabel}>Guests</Text>
+            <FeatureIcon name="guests" />
+          </View>
           <Text style={styles.statValue}>128</Text>
           <Badge label="72% RSVP" tone="primary" />
         </Card>
         <Card style={styles.statCard}>
-          <Text style={styles.statLabel}>Tasks Ready</Text>
+          <View style={styles.statHeader}>
+            <Text style={styles.statLabel}>Tasks Ready</Text>
+            <FeatureIcon name="tasks" />
+          </View>
           <Text style={styles.statValue}>18</Text>
           <Badge label="6 pending" tone="muted" />
         </Card>
@@ -40,12 +159,18 @@ export default function DashboardScreen() {
 
       <View style={styles.row}>
         <Card style={styles.statCard}>
-          <Text style={styles.statLabel}>Vendors</Text>
+          <View style={styles.statHeader}>
+            <Text style={styles.statLabel}>Vendors</Text>
+            <FeatureIcon name="vendors" />
+          </View>
           <Text style={styles.statValue}>12</Text>
           <Badge label="3 new leads" tone="accent" />
         </Card>
         <Card style={styles.statCard}>
-          <Text style={styles.statLabel}>Budget</Text>
+          <View style={styles.statHeader}>
+            <Text style={styles.statLabel}>Budget</Text>
+            <FeatureIcon name="budget" />
+          </View>
           <Text style={styles.statValue}>€18.4k</Text>
           <Badge label="On track" tone="primary" />
         </Card>
@@ -98,105 +223,3 @@ export default function DashboardScreen() {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  content: {
-    padding: spacing.xl,
-    gap: spacing.xl,
-  },
-  header: {
-    gap: spacing.sm,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  kicker: {
-    color: colors.secondary,
-    fontFamily: typography.bodyMedium,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-    fontSize: 12,
-  },
-  title: {
-    fontFamily: typography.heading,
-    fontSize: 30,
-    color: colors.primary,
-  },
-  subtitle: {
-    fontFamily: typography.body,
-    color: colors.muted,
-    fontSize: 14,
-  },
-  row: {
-    flexDirection: 'row',
-    gap: spacing.lg,
-  },
-  statCard: {
-    flex: 1,
-    gap: spacing.sm,
-  },
-  statLabel: {
-    fontFamily: typography.body,
-    color: colors.muted,
-    fontSize: 12,
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
-  },
-  statValue: {
-    fontFamily: typography.heading,
-    fontSize: 24,
-    color: colors.text,
-  },
-  sectionTitle: {
-    marginTop: spacing.md,
-  },
-  focusItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    marginBottom: spacing.sm,
-  },
-  focusText: {
-    fontFamily: typography.body,
-    color: colors.text,
-    flex: 1,
-  },
-  eventTitle: {
-    fontFamily: typography.heading,
-    color: colors.primary,
-    fontSize: 20,
-    marginBottom: spacing.xs,
-  },
-  eventMeta: {
-    fontFamily: typography.body,
-    color: colors.muted,
-    fontSize: 13,
-    marginBottom: spacing.md,
-  },
-  eventBody: {
-    fontFamily: typography.body,
-    color: colors.text,
-    lineHeight: 20,
-    marginBottom: spacing.lg,
-  },
-  eventActions: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    flexWrap: 'wrap',
-  },
-  sampleText: {
-    fontFamily: typography.body,
-    color: colors.muted,
-    marginBottom: spacing.md,
-  },
-  footer: {
-    alignItems: 'center',
-    paddingBottom: spacing.xl,
-  },
-});

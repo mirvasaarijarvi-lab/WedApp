@@ -1,4 +1,4 @@
-export const colors = {
+export const lightColors = {
   primary: '#C9A0A0', // Dusky pink
   secondary: '#B76E79', // Rose mauve
   accent: '#D4AF37', // Rose gold
@@ -7,6 +7,17 @@ export const colors = {
   text: '#4A4A4A',
   muted: '#9D9D9D',
   border: '#E6E1DD',
+};
+
+export const darkColors = {
+  primary: '#D8B3B3',
+  secondary: '#C27A86',
+  accent: '#E0C063',
+  background: '#1C1B1A',
+  surface: '#242221',
+  text: '#F2F0EE',
+  muted: '#B5AEA8',
+  border: '#3A3532',
 };
 
 export const spacing = {
@@ -37,5 +48,12 @@ export const shadow = {
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 3 },
     elevation: 2,
+  },
+  softDark: {
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 3,
   },
 };

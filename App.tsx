@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Feather } from '@expo/vector-icons';
-import { colors, spacing, typography } from './src/theme/tokens';
+import { BlurView } from 'expo-blur';
+import { useTheme } from './src/theme/theme';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import DashboardScreen from './src/screens/DashboardScreen';
 import GuestsScreen from './src/screens/GuestsScreen';
@@ -28,18 +29,22 @@ const AuthStackNav = createNativeStackNavigator();
 const OnboardStackNav = createNativeStackNavigator();
 
 function Tabs() {
+  const { colors, spacing, typography, isDark } = useTheme();
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: colors.surface,
+          backgroundColor: 'transparent',
           borderTopColor: colors.border,
           borderTopWidth: 1,
           height: 64,
           paddingBottom: spacing.sm,
           paddingTop: spacing.sm,
         },
+        tabBarBackground: () => (
+          <BlurView tint={isDark ? 'dark' : 'light'} intensity={30} style={{ flex: 1 }} />
+        ),
         tabBarLabelStyle: {
           fontFamily: typography.bodyMedium,
           fontSize: 11,

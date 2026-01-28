@@ -7,7 +7,7 @@ import Badge from '../components/Badge';
 import Card from '../components/Card';
 import EmptyState from '../components/EmptyState';
 import SectionTitle from '../components/SectionTitle';
-import { colors, spacing, typography } from '../theme/tokens';
+import { useTheme } from '../theme/theme';
 
 type Task = {
   id: string;
@@ -20,6 +20,84 @@ type Task = {
 
 export default function TasksScreen() {
   const { weddingId } = useWedding();
+  const { colors, spacing, typography } = useTheme();
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: {
+          flex: 1,
+          padding: spacing.xl,
+          backgroundColor: colors.background,
+        },
+        header: {
+          marginBottom: spacing.lg,
+        },
+        form: {
+          gap: spacing.sm,
+          marginBottom: spacing.lg,
+        },
+        input: {
+          borderWidth: 1,
+          borderColor: colors.border,
+          backgroundColor: colors.surface,
+          padding: spacing.md,
+          borderRadius: spacing.sm,
+          fontFamily: typography.body,
+          color: colors.text,
+        },
+        rowWrap: {
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          gap: spacing.sm,
+        },
+        selectArea: {
+          gap: spacing.sm,
+        },
+        selectLabel: {
+          fontFamily: typography.bodyMedium,
+          color: colors.text,
+        },
+        card: {
+          marginBottom: spacing.md,
+          gap: spacing.sm,
+        },
+        taskHeader: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: spacing.sm,
+        },
+        taskTitle: {
+          fontFamily: typography.bodyMedium,
+          fontSize: 16,
+          color: colors.text,
+          flex: 1,
+        },
+        taskMeta: {
+          fontFamily: typography.body,
+          color: colors.muted,
+          marginBottom: spacing.sm,
+        },
+        empty: {
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: spacing.xl,
+          backgroundColor: colors.background,
+        },
+        emptyText: {
+          fontFamily: typography.body,
+          color: colors.text,
+          textAlign: 'center',
+        },
+        emptyList: {
+          fontFamily: typography.body,
+          color: colors.muted,
+          textAlign: 'center',
+        },
+      }),
+    [colors, spacing, typography]
+  );
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
@@ -180,76 +258,3 @@ export default function TasksScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: spacing.xl,
-    backgroundColor: colors.background,
-  },
-  header: {
-    marginBottom: spacing.lg,
-  },
-  form: {
-    gap: spacing.sm,
-    marginBottom: spacing.lg,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    padding: spacing.md,
-    borderRadius: spacing.sm,
-    fontFamily: typography.body,
-  },
-  rowWrap: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-  },
-  selectArea: {
-    gap: spacing.sm,
-  },
-  selectLabel: {
-    fontFamily: typography.bodyMedium,
-    color: colors.text,
-  },
-  card: {
-    marginBottom: spacing.md,
-    gap: spacing.sm,
-  },
-  taskHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  taskTitle: {
-    fontFamily: typography.bodyMedium,
-    fontSize: 16,
-    color: colors.text,
-    flex: 1,
-  },
-  taskMeta: {
-    fontFamily: typography.body,
-    color: colors.muted,
-    marginBottom: spacing.sm,
-  },
-  empty: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: spacing.xl,
-    backgroundColor: colors.background,
-  },
-  emptyText: {
-    fontFamily: typography.body,
-    color: colors.text,
-    textAlign: 'center',
-  },
-  emptyList: {
-    fontFamily: typography.body,
-    color: colors.muted,
-    textAlign: 'center',
-  },
-});

@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import AppButton from './AppButton';
 import EmptyIllustration from './EmptyIllustration';
-import { colors, spacing, typography } from '../theme/tokens';
+import { useTheme } from '../theme/theme';
 
 type Props = {
   title: string;
@@ -12,6 +12,29 @@ type Props = {
 };
 
 export default function EmptyState({ title, description, actionLabel, onAction }: Props) {
+  const { colors, spacing, typography } = useTheme();
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: {
+          alignItems: 'center',
+          gap: spacing.sm,
+          padding: spacing.xl,
+        },
+        title: {
+          fontFamily: typography.heading,
+          fontSize: 20,
+          color: colors.text,
+          textAlign: 'center',
+        },
+        description: {
+          fontFamily: typography.body,
+          color: colors.muted,
+          textAlign: 'center',
+        },
+      }),
+    [colors, spacing, typography]
+  );
   return (
     <View style={styles.container}>
       <EmptyIllustration size={96} />
@@ -21,22 +44,3 @@ export default function EmptyState({ title, description, actionLabel, onAction }
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    gap: spacing.sm,
-    padding: spacing.xl,
-  },
-  title: {
-    fontFamily: typography.heading,
-    fontSize: 20,
-    color: colors.text,
-    textAlign: 'center',
-  },
-  description: {
-    fontFamily: typography.body,
-    color: colors.muted,
-    textAlign: 'center',
-  },
-});

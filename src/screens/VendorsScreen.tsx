@@ -1,12 +1,51 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import AppButton from '../components/AppButton';
 import Card from '../components/Card';
 import EmptyState from '../components/EmptyState';
 import SectionTitle from '../components/SectionTitle';
-import { colors, spacing, typography } from '../theme/tokens';
+import { useTheme } from '../theme/theme';
 
 export default function VendorsScreen() {
+  const { colors, spacing, typography } = useTheme();
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: {
+          flex: 1,
+          padding: spacing.xl,
+          backgroundColor: colors.background,
+        },
+        header: {
+          marginBottom: spacing.sm,
+        },
+        subtitle: {
+          fontFamily: typography.body,
+          color: colors.muted,
+          marginBottom: spacing.lg,
+        },
+        card: {
+          marginBottom: spacing.md,
+          gap: spacing.xs,
+        },
+        name: {
+          fontFamily: typography.bodyMedium,
+          color: colors.text,
+          fontSize: 16,
+        },
+        meta: {
+          fontFamily: typography.body,
+          color: colors.muted,
+          marginBottom: spacing.sm,
+        },
+        actions: {
+          flexDirection: 'row',
+          gap: spacing.sm,
+          flexWrap: 'wrap',
+        },
+      }),
+    [colors, spacing, typography]
+  );
   return (
     <View style={styles.container}>
       <SectionTitle style={styles.header}>Vendors</SectionTitle>
@@ -38,38 +77,3 @@ export default function VendorsScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: spacing.xl,
-    backgroundColor: colors.background,
-  },
-  header: {
-    marginBottom: spacing.sm,
-  },
-  subtitle: {
-    fontFamily: typography.body,
-    color: colors.muted,
-    marginBottom: spacing.lg,
-  },
-  card: {
-    marginBottom: spacing.md,
-    gap: spacing.xs,
-  },
-  name: {
-    fontFamily: typography.bodyMedium,
-    color: colors.text,
-    fontSize: 16,
-  },
-  meta: {
-    fontFamily: typography.body,
-    color: colors.muted,
-    marginBottom: spacing.sm,
-  },
-  actions: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    flexWrap: 'wrap',
-  },
-});

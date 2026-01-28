@@ -1,19 +1,162 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import AppButton from '../components/AppButton';
 import Badge from '../components/Badge';
 import BrandMark from '../components/BrandMark';
 import Card from '../components/Card';
 import SectionTitle from '../components/SectionTitle';
-import { colors, radius, spacing, typography } from '../theme/tokens';
+import { useTheme } from '../theme/theme';
 
 export default function DesignSystemScreen() {
+  const { colors, radius, spacing, typography, isDark } = useTheme();
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: {
+          flex: 1,
+          backgroundColor: colors.background,
+        },
+        content: {
+          padding: spacing.xl,
+          gap: spacing.xl,
+        },
+        header: {
+          gap: spacing.sm,
+          alignItems: 'center',
+        },
+        title: {
+          fontFamily: typography.heading,
+          fontSize: 26,
+          color: colors.primary,
+        },
+        subtitle: {
+          fontFamily: typography.body,
+          color: colors.muted,
+        },
+        paletteGrid: {
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          gap: spacing.md,
+        },
+        paletteCard: {
+          width: '47%',
+          gap: spacing.xs,
+        },
+        swatch: {
+          height: 64,
+          borderRadius: radius.button,
+        },
+        paletteName: {
+          fontFamily: typography.bodyMedium,
+          color: colors.text,
+          textTransform: 'capitalize',
+        },
+        paletteValue: {
+          fontFamily: typography.body,
+          color: colors.muted,
+          fontSize: 12,
+        },
+        kicker: {
+          fontFamily: typography.bodyMedium,
+          color: colors.muted,
+          fontSize: 12,
+          textTransform: 'uppercase',
+          letterSpacing: 0.8,
+          marginBottom: spacing.sm,
+        },
+        typeHeading: {
+          fontFamily: typography.heading,
+          fontSize: 24,
+          color: colors.text,
+          marginBottom: spacing.lg,
+        },
+        typeBody: {
+          fontFamily: typography.body,
+          color: colors.text,
+          lineHeight: 20,
+        },
+        spacingRow: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: spacing.sm,
+          marginBottom: spacing.sm,
+        },
+        spacingLabel: {
+          width: 40,
+          fontFamily: typography.bodyMedium,
+          color: colors.text,
+        },
+        spacingBar: {
+          height: 10,
+          backgroundColor: colors.accent,
+          borderRadius: radius.button,
+        },
+        spacingValue: {
+          fontFamily: typography.body,
+          color: colors.muted,
+        },
+        radiusGrid: {
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          gap: spacing.md,
+        },
+        radiusCard: {
+          width: '47%',
+          alignItems: 'center',
+          gap: spacing.sm,
+        },
+        radiusLabel: {
+          fontFamily: typography.bodyMedium,
+          color: colors.text,
+          textTransform: 'capitalize',
+        },
+        radiusShape: {
+          width: 80,
+          height: 60,
+          backgroundColor: colors.primary,
+        },
+        radiusValue: {
+          fontFamily: typography.body,
+          color: colors.muted,
+        },
+        rowWrap: {
+          flexDirection: 'row',
+          gap: spacing.sm,
+          flexWrap: 'wrap',
+        },
+        eventTitle: {
+          fontFamily: typography.heading,
+          fontSize: 20,
+          color: colors.primary,
+          marginBottom: spacing.xs,
+        },
+        eventMeta: {
+          fontFamily: typography.body,
+          color: colors.muted,
+          marginBottom: spacing.md,
+        },
+        eventBody: {
+          fontFamily: typography.body,
+          color: colors.text,
+          marginBottom: spacing.lg,
+        },
+        modeTag: {
+          fontFamily: typography.bodyMedium,
+          color: colors.secondary,
+          fontSize: 12,
+          textTransform: 'uppercase',
+          letterSpacing: 0.8,
+        },
+      }),
+    [colors, radius, spacing, typography]
+  );
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.header}>
         <BrandMark size={56} label="W" />
         <Text style={styles.title}>Wedding App Design System</Text>
         <Text style={styles.subtitle}>Elegant modern romantic, kept minimal.</Text>
+        <Text style={styles.modeTag}>{isDark ? 'Dark mode' : 'Light mode'}</Text>
       </View>
 
       <SectionTitle>Color Palette</SectionTitle>
@@ -87,134 +230,3 @@ export default function DesignSystemScreen() {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  content: {
-    padding: spacing.xl,
-    gap: spacing.xl,
-  },
-  header: {
-    gap: spacing.sm,
-    alignItems: 'center',
-  },
-  title: {
-    fontFamily: typography.heading,
-    fontSize: 26,
-    color: colors.primary,
-  },
-  subtitle: {
-    fontFamily: typography.body,
-    color: colors.muted,
-  },
-  paletteGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.md,
-  },
-  paletteCard: {
-    width: '47%',
-    gap: spacing.xs,
-  },
-  swatch: {
-    height: 64,
-    borderRadius: radius.button,
-  },
-  paletteName: {
-    fontFamily: typography.bodyMedium,
-    color: colors.text,
-    textTransform: 'capitalize',
-  },
-  paletteValue: {
-    fontFamily: typography.body,
-    color: colors.muted,
-    fontSize: 12,
-  },
-  kicker: {
-    fontFamily: typography.bodyMedium,
-    color: colors.muted,
-    fontSize: 12,
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
-    marginBottom: spacing.sm,
-  },
-  typeHeading: {
-    fontFamily: typography.heading,
-    fontSize: 24,
-    color: colors.text,
-    marginBottom: spacing.lg,
-  },
-  typeBody: {
-    fontFamily: typography.body,
-    color: colors.text,
-    lineHeight: 20,
-  },
-  spacingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    marginBottom: spacing.sm,
-  },
-  spacingLabel: {
-    width: 40,
-    fontFamily: typography.bodyMedium,
-    color: colors.text,
-  },
-  spacingBar: {
-    height: 10,
-    backgroundColor: colors.accent,
-    borderRadius: radius.button,
-  },
-  spacingValue: {
-    fontFamily: typography.body,
-    color: colors.muted,
-  },
-  radiusGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.md,
-  },
-  radiusCard: {
-    width: '47%',
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  radiusLabel: {
-    fontFamily: typography.bodyMedium,
-    color: colors.text,
-    textTransform: 'capitalize',
-  },
-  radiusShape: {
-    width: 80,
-    height: 60,
-    backgroundColor: colors.primary,
-  },
-  radiusValue: {
-    fontFamily: typography.body,
-    color: colors.muted,
-  },
-  rowWrap: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    flexWrap: 'wrap',
-  },
-  eventTitle: {
-    fontFamily: typography.heading,
-    fontSize: 20,
-    color: colors.primary,
-    marginBottom: spacing.xs,
-  },
-  eventMeta: {
-    fontFamily: typography.body,
-    color: colors.muted,
-    marginBottom: spacing.md,
-  },
-  eventBody: {
-    fontFamily: typography.body,
-    color: colors.text,
-    marginBottom: spacing.lg,
-  },
-});

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, FlatList, TextInput, Alert, StyleSheet } from 'react-native';
 import { supabase } from '../lib/supabase';
 import { useWedding } from '../lib/WeddingContext';
@@ -6,7 +6,7 @@ import AppButton from '../components/AppButton';
 import Card from '../components/Card';
 import EmptyState from '../components/EmptyState';
 import SectionTitle from '../components/SectionTitle';
-import { colors, spacing, typography } from '../theme/tokens';
+import { useTheme } from '../theme/theme';
 
 type Guest = {
   id: string;
@@ -18,6 +18,74 @@ type Guest = {
 
 export default function GuestsScreen() {
   const { weddingId } = useWedding();
+  const { colors, spacing, typography } = useTheme();
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: {
+          flex: 1,
+          padding: spacing.xl,
+          backgroundColor: colors.background,
+        },
+        header: {
+          marginBottom: spacing.lg,
+        },
+        form: {
+          gap: spacing.sm,
+          marginBottom: spacing.lg,
+        },
+        input: {
+          borderWidth: 1,
+          borderColor: colors.border,
+          backgroundColor: colors.surface,
+          padding: spacing.md,
+          borderRadius: spacing.sm,
+          fontFamily: typography.body,
+          color: colors.text,
+        },
+        row: {
+          flexDirection: 'row',
+          gap: spacing.sm,
+        },
+        rowWrap: {
+          flexDirection: 'row',
+          gap: spacing.sm,
+          flexWrap: 'wrap',
+          marginTop: spacing.sm,
+        },
+        card: {
+          marginBottom: spacing.md,
+          gap: spacing.xs,
+        },
+        name: {
+          fontFamily: typography.bodyMedium,
+          color: colors.text,
+          fontSize: 16,
+        },
+        meta: {
+          fontFamily: typography.body,
+          color: colors.muted,
+        },
+        empty: {
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: spacing.xl,
+          backgroundColor: colors.background,
+        },
+        emptyText: {
+          fontFamily: typography.body,
+          color: colors.text,
+          textAlign: 'center',
+        },
+        emptyList: {
+          fontFamily: typography.body,
+          color: colors.muted,
+          textAlign: 'center',
+        },
+      }),
+    [colors, spacing, typography]
+  );
   const [guests, setGuests] = useState<Guest[]>([]);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
@@ -185,66 +253,3 @@ export default function GuestsScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: spacing.xl,
-    backgroundColor: colors.background,
-  },
-  header: {
-    marginBottom: spacing.lg,
-  },
-  form: {
-    gap: spacing.sm,
-    marginBottom: spacing.lg,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    padding: spacing.md,
-    borderRadius: spacing.sm,
-    fontFamily: typography.body,
-  },
-  row: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  rowWrap: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    flexWrap: 'wrap',
-    marginTop: spacing.sm,
-  },
-  card: {
-    marginBottom: spacing.md,
-    gap: spacing.xs,
-  },
-  name: {
-    fontFamily: typography.bodyMedium,
-    color: colors.text,
-    fontSize: 16,
-  },
-  meta: {
-    fontFamily: typography.body,
-    color: colors.muted,
-  },
-  empty: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: spacing.xl,
-    backgroundColor: colors.background,
-  },
-  emptyText: {
-    fontFamily: typography.body,
-    color: colors.text,
-    textAlign: 'center',
-  },
-  emptyList: {
-    fontFamily: typography.body,
-    color: colors.muted,
-    textAlign: 'center',
-  },
-});
