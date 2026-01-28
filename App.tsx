@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -6,6 +6,7 @@ import DashboardScreen from './src/screens/DashboardScreen';
 import GuestsScreen from './src/screens/GuestsScreen';
 import TasksScreen from './src/screens/TasksScreen';
 import VendorsScreen from './src/screens/VendorsScreen';
+import DesignSystemScreen from './src/screens/DesignSystemScreen';
 import AuthScreen from './src/screens/AuthScreen';
 import VerifyOTPScreen from './src/screens/VerifyOTPScreen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -15,6 +16,9 @@ import { WeddingProvider, useWedding } from './src/lib/WeddingContext';
 import CreateWeddingScreen from './src/screens/CreateWeddingScreen';
 import WeddingsScreen from './src/screens/WeddingsScreen';
 import EnterWeddingCodeScreen from './src/screens/EnterWeddingCodeScreen';
+import { useFonts } from '@expo-google-fonts/playfair-display';
+import { PlayfairDisplay_600SemiBold } from '@expo-google-fonts/playfair-display';
+import { Inter_400Regular, Inter_500Medium } from '@expo-google-fonts/inter';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createNativeStackNavigator();
@@ -28,6 +32,7 @@ function Tabs() {
       <Tab.Screen name="Guests" component={GuestsScreen} />
       <Tab.Screen name="Tasks" component={TasksScreen} />
       <Tab.Screen name="Vendors" component={VendorsScreen} />
+      <Tab.Screen name="Design" component={DesignSystemScreen} />
     </Tab.Navigator>
   );
 }
@@ -55,6 +60,11 @@ function AppInner() {
   const [session, setSession] = useState<Session | null>(null);
   const [ready, setReady] = useState(false);
   const { weddingId, ready: weddingReady } = useWedding();
+  const [fontsLoaded] = useFonts({
+    PlayfairDisplay_600SemiBold,
+    Inter_400Regular,
+    Inter_500Medium,
+  });
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -67,7 +77,7 @@ function AppInner() {
     return () => { sub.subscription.unsubscribe(); };
   }, []);
 
-  if (!ready) return null;
+  if (!ready || !fontsLoaded) return null;
 
   return (
     <NavigationContainer>

@@ -1,7 +1,13 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
-import { View, Text, FlatList, TextInput, Button, Alert } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { View, Text, FlatList, TextInput, Alert, StyleSheet } from 'react-native';
 import { supabase } from '../lib/supabase';
 import { useWedding } from '../lib/WeddingContext';
+import AppButton from '../components/AppButton';
+import Badge from '../components/Badge';
+import Card from '../components/Card';
+import EmptyState from '../components/EmptyState';
+import SectionTitle from '../components/SectionTitle';
+import { colors, spacing, typography } from '../theme/tokens';
 
 type Task = {
   id: string;
@@ -87,50 +93,61 @@ export default function TasksScreen() {
 
   if (!weddingId) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-        <Text style={{ fontSize: 18, textAlign: 'center' }}>
-          Select or create a wedding first to manage tasks.
-        </Text>
+      <View style={styles.empty}>
+        <EmptyState
+          title="No wedding selected"
+          description="Select or create a wedding first to manage tasks."
+        />
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <Text style={{ fontSize: 24, fontWeight: '600', marginBottom: 12 }}>Tasks</Text>
+    <View style={styles.container}>
+      <SectionTitle style={styles.header}>Tasks</SectionTitle>
 
-      <View style={{ gap: 8, marginBottom: 12 }}>
+      <Card style={styles.form}>
         <TextInput
           placeholder="Task title"
           value={title}
           onChangeText={setTitle}
-          style={{ borderWidth: 1, borderColor: '#ccc', padding: 12, borderRadius: 8 }}
+          style={styles.input}
         />
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+        <View style={styles.rowWrap}>
           {(['guest', 'vendor', 'officiant', 'venue'] as const).map((k) => (
-            <Button key={k} title={`${assigneeKind === k ? '• ' : ''}${k}`} onPress={() => setAssigneeKind(k)} />
+            <AppButton
+              key={k}
+              title={`${assigneeKind === k ? '• ' : ''}${k}`}
+              variant={assigneeKind === k ? 'secondary' : 'outline'}
+              onPress={() => setAssigneeKind(k)}
+            />
           ))}
-          <Button title={`${assigneeKind === null ? '• ' : ''}unassigned`} onPress={() => { setAssigneeKind(null); setAssigneeId(null); }} />
+          <AppButton
+            title={`${assigneeKind === null ? '• ' : ''}unassigned`}
+            variant={assigneeKind === null ? 'secondary' : 'outline'}
+            onPress={() => { setAssigneeKind(null); setAssigneeId(null); }}
+          />
         </View>
         {assigneeKind && (
-          <View style={{ gap: 8 }}>
-            <Text>Select {assigneeKind}</Text>
+          <View style={styles.selectArea}>
+            <Text style={styles.selectLabel}>Select {assigneeKind}</Text>
             <FlatList
               style={{ maxHeight: 160 }}
               data={assigneeOptions}
               keyExtractor={(i) => i.id}
               renderItem={({ item }) => (
-                <Button
+                <AppButton
                   title={`${assigneeId === item.id ? '• ' : ''}${item.label}`}
+                  variant={assigneeId === item.id ? 'secondary' : 'outline'}
                   onPress={() => setAssigneeId(item.id)}
                 />
               )}
-              ListEmptyComponent={<Text style={{ color: '#666' }}>No options</Text>}
+              ListEmptyComponent={<Text style={styles.emptyList}>No options</Text>}
             />
           </View>
         )}
-        <Button title="Add task" onPress={onAdd} disabled={loading || !title || (!!assigneeKind && !assigneeId)} />
-      </View>
+        <AppButton title="Add task" onPress={onAdd} disabled={loading || !title || (!!assigneeKind && !assigneeId)} />
+      </Card>
 
       <FlatList
         data={tasks}
@@ -138,19 +155,101 @@ export default function TasksScreen() {
         refreshing={loading}
         onRefresh={load}
         renderItem={({ item }) => (
-          <View style={{ paddingVertical: 12, borderBottomWidth: 1, borderColor: '#eee' }}>
-            <Text style={{ fontSize: 16 }}>{item.title}</Text>
-            <Text style={{ color: '#666' }}>
-              {item.completed ? 'Ready' : 'Open'}
-              {item.assignee_kind ? ` • ${item.assignee_kind}` : ''}{item.assignee_ref_id ? ` • ${item.assignee_ref_id}` : ''}
-            </Text>
-            <View style={{ flexDirection: 'row', gap: 8, marginTop: 8 }}>
-              <Button title={item.completed ? 'Mark not ready' : 'Mark ready'} onPress={() => toggleComplete(item.id, item.completed)} />
+          <Card style={styles.card}>
+            <View style={styles.taskHeader}>
+              <Text style={styles.taskTitle}>{item.title}</Text>
+              <Badge label={item.completed ? 'Ready' : 'Open'} tone={item.completed ? 'primary' : 'muted'} />
             </View>
-          </View>
+            <Text style={styles.taskMeta}>
+              {item.assignee_kind ? `Assigned to ${item.assignee_kind}` : 'Unassigned'}
+            </Text>
+            <AppButton
+              title={item.completed ? 'Mark not ready' : 'Mark ready'}
+              variant={item.completed ? 'outline' : 'secondary'}
+              onPress={() => toggleComplete(item.id, item.completed)}
+            />
+          </Card>
         )}
-        ListEmptyComponent={<Text>No tasks yet.</Text>}
+        ListEmptyComponent={
+          <EmptyState
+            title="No tasks yet"
+            description="Add your first planning task and track it as ready."
+          />
+        }
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: spacing.xl,
+    backgroundColor: colors.background,
+  },
+  header: {
+    marginBottom: spacing.lg,
+  },
+  form: {
+    gap: spacing.sm,
+    marginBottom: spacing.lg,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    padding: spacing.md,
+    borderRadius: spacing.sm,
+    fontFamily: typography.body,
+  },
+  rowWrap: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+  },
+  selectArea: {
+    gap: spacing.sm,
+  },
+  selectLabel: {
+    fontFamily: typography.bodyMedium,
+    color: colors.text,
+  },
+  card: {
+    marginBottom: spacing.md,
+    gap: spacing.sm,
+  },
+  taskHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  taskTitle: {
+    fontFamily: typography.bodyMedium,
+    fontSize: 16,
+    color: colors.text,
+    flex: 1,
+  },
+  taskMeta: {
+    fontFamily: typography.body,
+    color: colors.muted,
+    marginBottom: spacing.sm,
+  },
+  empty: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: spacing.xl,
+    backgroundColor: colors.background,
+  },
+  emptyText: {
+    fontFamily: typography.body,
+    color: colors.text,
+    textAlign: 'center',
+  },
+  emptyList: {
+    fontFamily: typography.body,
+    color: colors.muted,
+    textAlign: 'center',
+  },
+});

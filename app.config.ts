@@ -1,4 +1,4 @@
-﻿import 'dotenv/config';
+import 'dotenv/config';
 import { ExpoConfig } from 'expo/config';
 
 export default ({ config }: { config: ExpoConfig }) => ({
@@ -6,6 +6,7 @@ export default ({ config }: { config: ExpoConfig }) => ({
   name: 'FirstWedAppMobile',
   slug: 'first-wed-app-mobile',
   owner: 'mimmisaarijarvi',
+  plugins: ['expo-font'],
   android: {
     package: 'com.mimmisaarijarvi.firstwedapp',
   },

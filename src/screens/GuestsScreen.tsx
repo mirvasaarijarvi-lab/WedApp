@@ -1,7 +1,12 @@
-﻿import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TextInput, Button, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, TextInput, Alert, StyleSheet } from 'react-native';
 import { supabase } from '../lib/supabase';
 import { useWedding } from '../lib/WeddingContext';
+import AppButton from '../components/AppButton';
+import Card from '../components/Card';
+import EmptyState from '../components/EmptyState';
+import SectionTitle from '../components/SectionTitle';
+import { colors, spacing, typography } from '../theme/tokens';
 
 type Guest = {
   id: string;
@@ -108,24 +113,25 @@ export default function GuestsScreen() {
 
   if (!weddingId) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-        <Text style={{ fontSize: 18, textAlign: 'center' }}>
-          Select or create a wedding first to manage guests.
-        </Text>
+      <View style={styles.empty}>
+        <EmptyState
+          title="No wedding selected"
+          description="Select or create a wedding first to manage guests."
+        />
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <Text style={{ fontSize: 24, fontWeight: '600', marginBottom: 12 }}>Guests</Text>
+    <View style={styles.container}>
+      <SectionTitle style={styles.header}>Guests</SectionTitle>
 
-      <View style={{ gap: 8, marginBottom: 12 }}>
+      <Card style={styles.form}>
         <TextInput
           placeholder="Name"
           value={name}
           onChangeText={setName}
-          style={{ borderWidth: 1, borderColor: '#ccc', padding: 12, borderRadius: 8 }}
+          style={styles.input}
         />
         <TextInput
           placeholder="Email (optional)"
@@ -133,20 +139,20 @@ export default function GuestsScreen() {
           onChangeText={setEmail}
           autoCapitalize="none"
           inputMode="email"
-          style={{ borderWidth: 1, borderColor: '#ccc', padding: 12, borderRadius: 8 }}
+          style={styles.input}
         />
         <TextInput
           placeholder="Phone (optional)"
           value={phone}
           onChangeText={setPhone}
           inputMode="tel"
-          style={{ borderWidth: 1, borderColor: '#ccc', padding: 12, borderRadius: 8 }}
+          style={styles.input}
         />
-        <View style={{ flexDirection: 'row', gap: 8 }}>
-          <Button title={editingId ? 'Save' : 'Add'} onPress={onSubmit} disabled={loading || !name} />
-          {editingId ? <Button title="Cancel" onPress={resetForm} /> : null}
+        <View style={styles.row}>
+          <AppButton title={editingId ? 'Save' : 'Add'} onPress={onSubmit} disabled={loading || !name} />
+          {editingId ? <AppButton title="Cancel" variant="outline" onPress={resetForm} /> : null}
         </View>
-      </View>
+      </Card>
 
       <FlatList
         data={guests}
@@ -154,23 +160,91 @@ export default function GuestsScreen() {
         refreshing={loading}
         onRefresh={load}
         renderItem={({ item }) => (
-          <View style={{ paddingVertical: 12, borderBottomWidth: 1, borderColor: '#eee' }}>
-            <Text style={{ fontSize: 16 }}>{item.name}</Text>
-            {!!item.email && <Text style={{ color: '#666' }}>{item.email}</Text>}
-            {!!item.phone && <Text style={{ color: '#666' }}>{item.phone}</Text>}
-            <View style={{ flexDirection: 'row', gap: 8, marginTop: 8 }}>
-              <Button title="Edit" onPress={() => onEdit(item)} />
-              <Button title="Delete" onPress={() => onDelete(item.id)} />
+          <Card style={styles.card}>
+            <Text style={styles.name}>{item.name}</Text>
+            {!!item.email && <Text style={styles.meta}>{item.email}</Text>}
+            {!!item.phone && <Text style={styles.meta}>{item.phone}</Text>}
+            <View style={styles.row}>
+              <AppButton title="Edit" variant="outline" onPress={() => onEdit(item)} />
+              <AppButton title="Delete" variant="ghost" onPress={() => onDelete(item.id)} />
             </View>
-            <View style={{ flexDirection: 'row', gap: 8, marginTop: 8 }}>
-              <Button title="RSVP Yes" onPress={() => setRsvp(item.id, 'yes')} />
-              <Button title="RSVP No" onPress={() => setRsvp(item.id, 'no')} />
-              <Button title="RSVP Maybe" onPress={() => setRsvp(item.id, 'maybe')} />
+            <View style={styles.rowWrap}>
+              <AppButton title="RSVP Yes" variant="primary" onPress={() => setRsvp(item.id, 'yes')} />
+              <AppButton title="RSVP No" variant="outline" onPress={() => setRsvp(item.id, 'no')} />
+              <AppButton title="RSVP Maybe" variant="secondary" onPress={() => setRsvp(item.id, 'maybe')} />
             </View>
-          </View>
+          </Card>
         )}
-        ListEmptyComponent={<Text>No guests yet.</Text>}
+        ListEmptyComponent={
+          <EmptyState
+            title="No guests yet"
+            description="Start adding guests and track RSVPs with a calm, elegant view."
+          />
+        }
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: spacing.xl,
+    backgroundColor: colors.background,
+  },
+  header: {
+    marginBottom: spacing.lg,
+  },
+  form: {
+    gap: spacing.sm,
+    marginBottom: spacing.lg,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    padding: spacing.md,
+    borderRadius: spacing.sm,
+    fontFamily: typography.body,
+  },
+  row: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  rowWrap: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    flexWrap: 'wrap',
+    marginTop: spacing.sm,
+  },
+  card: {
+    marginBottom: spacing.md,
+    gap: spacing.xs,
+  },
+  name: {
+    fontFamily: typography.bodyMedium,
+    color: colors.text,
+    fontSize: 16,
+  },
+  meta: {
+    fontFamily: typography.body,
+    color: colors.muted,
+  },
+  empty: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: spacing.xl,
+    backgroundColor: colors.background,
+  },
+  emptyText: {
+    fontFamily: typography.body,
+    color: colors.text,
+    textAlign: 'center',
+  },
+  emptyList: {
+    fontFamily: typography.body,
+    color: colors.muted,
+    textAlign: 'center',
+  },
+});
