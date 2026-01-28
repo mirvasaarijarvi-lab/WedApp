@@ -3,6 +3,7 @@ import { View, Text, FlatList, TextInput, Alert, StyleSheet } from 'react-native
 import { supabase } from '../lib/supabase';
 import { useWedding } from '../lib/WeddingContext';
 import AppButton from '../components/AppButton';
+import Badge from '../components/Badge';
 import Card from '../components/Card';
 import EmptyState from '../components/EmptyState';
 import FeatureIcon from '../components/FeatureIcon';
@@ -15,6 +16,7 @@ type Guest = {
   name: string;
   email: string | null;
   phone: string | null;
+  rsvp_status?: 'yes' | 'no' | 'maybe' | null;
 };
 
 export default function GuestsScreen() {
@@ -69,6 +71,11 @@ export default function GuestsScreen() {
           alignItems: 'center',
           justifyContent: 'space-between',
         },
+        cardHeaderRight: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: spacing.sm,
+        },
         name: {
           fontFamily: typography.bodyMedium,
           color: colors.text,
@@ -77,6 +84,20 @@ export default function GuestsScreen() {
         meta: {
           fontFamily: typography.body,
           color: colors.muted,
+        },
+        chipRow: {
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          gap: spacing.xs,
+        },
+        actionRow: {
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          gap: spacing.sm,
+        },
+        buttonCompact: {
+          paddingVertical: spacing.sm,
+          paddingHorizontal: spacing.lg,
         },
         empty: {
           flex: 1,
@@ -121,7 +142,22 @@ export default function GuestsScreen() {
       .eq('wedding_id', weddingId)
       .order('name');
     if (error) Alert.alert('Error', error.message);
-    setGuests((data as any) || []);
+    const guestsData = (data as Guest[]) || [];
+    if (guestsData.length === 0) {
+      setGuests([]);
+      setLoading(false);
+      return;
+    }
+    const { data: rsvpData, error: rsvpError } = await supabase
+      .from('rsvps')
+      .select('guest_id,status')
+      .in(
+        'guest_id',
+        guestsData.map((g) => g.id)
+      );
+    if (rsvpError) Alert.alert('Error', rsvpError.message);
+    const rsvpMap = new Map((rsvpData || []).map((r) => [r.guest_id, r.status]));
+    setGuests(guestsData.map((g) => ({ ...g, rsvp_status: (rsvpMap.get(g.id) as any) || null })));
     setLoading(false);
   };
 
@@ -191,6 +227,20 @@ export default function GuestsScreen() {
     }
   };
 
+  const getRsvpBadge = (status: Guest['rsvp_status']) => {
+    if (status === 'yes') return { label: 'RSVP Yes', tone: 'primary' as const };
+    if (status === 'maybe') return { label: 'RSVP Maybe', tone: 'accent' as const };
+    if (status === 'no') return { label: 'RSVP No', tone: 'muted' as const };
+    return { label: 'No RSVP', tone: 'muted' as const };
+  };
+
+  const getStatusChip = (status: Guest['rsvp_status']) => {
+    if (status === 'yes') return { label: 'Confirmed', tone: 'primary' as const };
+    if (status === 'maybe') return { label: 'Pending', tone: 'accent' as const };
+    if (status === 'no') return { label: 'Declined', tone: 'muted' as const };
+    return { label: 'Awaiting reply', tone: 'muted' as const };
+  };
+
   if (!weddingId) {
     return (
       <View style={styles.empty}>
@@ -247,18 +297,25 @@ export default function GuestsScreen() {
           <Card style={styles.card}>
             <View style={styles.cardHeader}>
               <Text style={styles.name}>{item.name}</Text>
-              <FeatureIcon name="guests" size={28} />
+              <View style={styles.cardHeaderRight}>
+                <Badge {...getRsvpBadge(item.rsvp_status ?? null)} />
+                <FeatureIcon name="guests" size={28} />
+              </View>
             </View>
             {!!item.email && <Text style={styles.meta}>{item.email}</Text>}
             {!!item.phone && <Text style={styles.meta}>{item.phone}</Text>}
-            <View style={styles.row}>
-              <AppButton title="Edit" variant="outline" onPress={() => onEdit(item)} />
-              <AppButton title="Delete" variant="ghost" onPress={() => onDelete(item.id)} />
+            <View style={styles.chipRow}>
+              <Badge label="Invite sent" tone="muted" />
+              <Badge {...getStatusChip(item.rsvp_status ?? null)} />
             </View>
-            <View style={styles.rowWrap}>
-              <AppButton title="RSVP Yes" variant="primary" onPress={() => setRsvp(item.id, 'yes')} />
-              <AppButton title="RSVP No" variant="outline" onPress={() => setRsvp(item.id, 'no')} />
-              <AppButton title="RSVP Maybe" variant="secondary" onPress={() => setRsvp(item.id, 'maybe')} />
+            <View style={styles.actionRow}>
+              <AppButton title="Edit" variant="outline" onPress={() => onEdit(item)} style={styles.buttonCompact} />
+              <AppButton title="Delete" variant="ghost" onPress={() => onDelete(item.id)} style={styles.buttonCompact} />
+            </View>
+            <View style={styles.actionRow}>
+              <AppButton title="RSVP Yes" variant="primary" onPress={() => setRsvp(item.id, 'yes')} style={styles.buttonCompact} />
+              <AppButton title="RSVP No" variant="outline" onPress={() => setRsvp(item.id, 'no')} style={styles.buttonCompact} />
+              <AppButton title="RSVP Maybe" variant="secondary" onPress={() => setRsvp(item.id, 'maybe')} style={styles.buttonCompact} />
             </View>
           </Card>
         )}

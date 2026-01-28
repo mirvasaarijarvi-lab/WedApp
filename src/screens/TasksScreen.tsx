@@ -91,6 +91,15 @@ export default function TasksScreen() {
           color: colors.muted,
           marginBottom: spacing.sm,
         },
+        chipRow: {
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          gap: spacing.xs,
+        },
+        buttonCompact: {
+          paddingVertical: spacing.sm,
+          paddingHorizontal: spacing.lg,
+        },
         empty: {
           flex: 1,
           alignItems: 'center',
@@ -261,10 +270,19 @@ export default function TasksScreen() {
             <Text style={styles.taskMeta}>
               {item.assignee_kind ? `Assigned to ${item.assignee_kind}` : 'Unassigned'}
             </Text>
+            <View style={styles.chipRow}>
+              <Badge
+                label={item.assignee_kind ? `Assignee: ${item.assignee_kind}` : 'Assignee: none'}
+                tone="muted"
+              />
+              <Badge label="Priority: normal" tone="accent" />
+              <Badge label="Due: TBD" tone="muted" />
+            </View>
             <AppButton
               title={item.completed ? 'Mark not ready' : 'Mark ready'}
               variant={item.completed ? 'outline' : 'secondary'}
               onPress={() => toggleComplete(item.id, item.completed)}
+              style={styles.buttonCompact}
             />
           </Card>
         )}
