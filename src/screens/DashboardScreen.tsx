@@ -105,6 +105,43 @@ export default function DashboardScreen() {
           color: colors.muted,
           fontSize: 12,
         },
+        timelineGrid: {
+          flexDirection: 'row',
+          gap: spacing.md,
+        },
+        timelineCard: {
+          flex: 1,
+          gap: spacing.sm,
+        },
+        timelineTitle: {
+          fontFamily: typography.bodyMedium,
+          color: colors.text,
+          fontSize: 14,
+          textTransform: 'uppercase',
+          letterSpacing: 0.6,
+        },
+        timelineItem: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: spacing.sm,
+        },
+        timelineDot: {
+          width: 8,
+          height: 8,
+          borderRadius: 4,
+          backgroundColor: colors.secondary,
+        },
+        timelineText: {
+          fontFamily: typography.body,
+          color: colors.text,
+          fontSize: 13,
+          flex: 1,
+        },
+        timelineMeta: {
+          fontFamily: typography.body,
+          color: colors.muted,
+          fontSize: 12,
+        },
         eventTitle: {
           fontFamily: typography.heading,
           color: colors.primary,
@@ -232,6 +269,37 @@ export default function DashboardScreen() {
           <AppButton title="Send update" variant="outline" />
         </View>
       </Card>
+
+      <View style={styles.sectionHeader}>
+        <SectionTitle>Timeline</SectionTitle>
+        <Text style={styles.sectionMeta}>Today · Tomorrow · Next week</Text>
+      </View>
+      <View style={styles.timelineGrid}>
+        <Card style={styles.timelineCard}>
+          <Text style={styles.timelineTitle}>Today</Text>
+          <View style={styles.timelineItem}>
+            <View style={styles.timelineDot} />
+            <Text style={styles.timelineText}>Confirm florist delivery window</Text>
+          </View>
+          <Text style={styles.timelineMeta}>2:00 PM · Vendor call</Text>
+        </Card>
+        <Card style={styles.timelineCard}>
+          <Text style={styles.timelineTitle}>Tomorrow</Text>
+          <View style={styles.timelineItem}>
+            <View style={styles.timelineDot} />
+            <Text style={styles.timelineText}>Finalize seating layout</Text>
+          </View>
+          <Text style={styles.timelineMeta}>10:00 AM · Venue walkthrough</Text>
+        </Card>
+        <Card style={styles.timelineCard}>
+          <Text style={styles.timelineTitle}>Next week</Text>
+          <View style={styles.timelineItem}>
+            <View style={styles.timelineDot} />
+            <Text style={styles.timelineText}>Send RSVP reminder</Text>
+          </View>
+          <Text style={styles.timelineMeta}>Monday · Guest list</Text>
+        </Card>
+      </View>
 
       <Card>
         <View style={styles.eventActions}>

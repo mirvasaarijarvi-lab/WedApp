@@ -266,7 +266,7 @@ export default function GuestsScreen() {
           <EmptyState
             title="No guests yet"
             description="Start adding guests and track RSVPs with a calm, elegant view."
-          illustration="bouquet"
+            illustration="bouquet"
           />
         }
       />
