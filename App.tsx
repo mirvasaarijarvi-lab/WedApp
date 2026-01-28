@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Feather } from '@expo/vector-icons';
+import { colors, spacing, typography } from './src/theme/tokens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import DashboardScreen from './src/screens/DashboardScreen';
 import GuestsScreen from './src/screens/GuestsScreen';
@@ -27,12 +29,60 @@ const OnboardStackNav = createNativeStackNavigator();
 
 function Tabs() {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen name="Dashboard" component={DashboardScreen} />
-      <Tab.Screen name="Guests" component={GuestsScreen} />
-      <Tab.Screen name="Tasks" component={TasksScreen} />
-      <Tab.Screen name="Vendors" component={VendorsScreen} />
-      <Tab.Screen name="Design" component={DesignSystemScreen} />
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: colors.surface,
+          borderTopColor: colors.border,
+          borderTopWidth: 1,
+          height: 64,
+          paddingBottom: spacing.sm,
+          paddingTop: spacing.sm,
+        },
+        tabBarLabelStyle: {
+          fontFamily: typography.bodyMedium,
+          fontSize: 11,
+        },
+        tabBarActiveTintColor: colors.secondary,
+        tabBarInactiveTintColor: colors.muted,
+      }}
+    >
+      <Tab.Screen
+        name="Dashboard"
+        component={DashboardScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => <Feather name="home" color={color} size={size} />,
+        }}
+      />
+      <Tab.Screen
+        name="Guests"
+        component={GuestsScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => <Feather name="users" color={color} size={size} />,
+        }}
+      />
+      <Tab.Screen
+        name="Tasks"
+        component={TasksScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => <Feather name="check-square" color={color} size={size} />,
+        }}
+      />
+      <Tab.Screen
+        name="Vendors"
+        component={VendorsScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => <Feather name="briefcase" color={color} size={size} />,
+        }}
+      />
+      <Tab.Screen
+        name="Design"
+        component={DesignSystemScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => <Feather name="layers" color={color} size={size} />,
+        }}
+      />
     </Tab.Navigator>
   );
 }

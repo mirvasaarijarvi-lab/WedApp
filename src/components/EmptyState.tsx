@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import AppButton from './AppButton';
-import BrandMark from './BrandMark';
+import EmptyIllustration from './EmptyIllustration';
 import { colors, spacing, typography } from '../theme/tokens';
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
 export default function EmptyState({ title, description, actionLabel, onAction }: Props) {
   return (
     <View style={styles.container}>
-      <BrandMark size={56} />
+      <EmptyIllustration size={96} />
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.description}>{description}</Text>
       {actionLabel ? <AppButton title={actionLabel} variant="outline" onPress={onAction} /> : null}
