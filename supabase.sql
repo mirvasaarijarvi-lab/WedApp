@@ -1,4 +1,4 @@
-﻿-- Core schema for FirstWedApp (run in Supabase SQL editor)
+-- Core schema for FirstWedApp (run in Supabase SQL editor)
 create table if not exists users (
   id uuid primary key default gen_random_uuid(),
   email text unique not null,
@@ -186,6 +186,16 @@ create table if not exists budget_items (
   actual_cents integer default 0,
   notes text
 );
+
+do $$
+begin
+  if not exists (
+    select 1 from information_schema.columns
+    where table_name = 'budget_items' and column_name = 'due_date'
+  ) then
+    alter table budget_items add column due_date date;
+  end if;
+end $$;
 
 -- Row Level Security (RLS) and policies
 -- Migrate user references to auth.users

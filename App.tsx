@@ -9,6 +9,7 @@ import DashboardScreen from './src/screens/DashboardScreen';
 import GuestsScreen from './src/screens/GuestsScreen';
 import TasksScreen from './src/screens/TasksScreen';
 import VendorsScreen from './src/screens/VendorsScreen';
+import BudgetScreen from './src/screens/BudgetScreen';
 import DesignSystemScreen from './src/screens/DesignSystemScreen';
 import AuthScreen from './src/screens/AuthScreen';
 import VerifyOTPScreen from './src/screens/VerifyOTPScreen';
@@ -79,6 +80,13 @@ function Tabs() {
         component={VendorsScreen}
         options={{
           tabBarIcon: ({ color, size }) => <Feather name="briefcase" color={color} size={size} />,
+        }}
+      />
+      <Tab.Screen
+        name="Budget"
+        component={BudgetScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => <Feather name="pie-chart" color={color} size={size} />,
         }}
       />
       <Tab.Screen
