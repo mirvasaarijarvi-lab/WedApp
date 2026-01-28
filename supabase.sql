@@ -116,6 +116,30 @@ begin
   end if;
 end $$;
 
+create or replace function public.create_wedding(p_title text, p_date date, p_venue text)
+returns uuid
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  wid uuid;
+begin
+  insert into weddings (title, date, venue)
+  values (p_title, p_date, p_venue)
+  returning id into wid;
+
+  insert into wedding_members (wedding_id, user_id, role, role_type, permission)
+  values (wid, auth.uid(), 'owner', 'bride_groom', 'owner')
+  on conflict (wedding_id, user_id) do update
+    set role = 'owner',
+        role_type = 'bride_groom',
+        permission = 'owner';
+
+  return wid;
+end;
+$$;
+
 -- Helper to check bcrypt hash (pgcrypto needed)
 -- create extension if not exists pgcrypto; -- enable this once in your project
 

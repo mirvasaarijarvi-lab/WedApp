@@ -45,19 +45,14 @@ export default function CreateWeddingScreen() {
       const parsedDate = parseDateInput(date);
       if (date && !parsedDate) throw new Error('Date must be DDMMYYYY');
 
-      const { data: wedding, error: wErr } = await supabase
-        .from('weddings')
-        .insert([{ title, date: parsedDate, venue: venue || null }])
-        .select()
-        .single();
+      const { data: weddingId, error: wErr } = await supabase.rpc('create_wedding', {
+        p_title: title,
+        p_date: parsedDate,
+        p_venue: venue || null,
+      });
       if (wErr) throw wErr;
 
-      const { error: mErr } = await supabase
-        .from('wedding_members')
-        .insert([{ wedding_id: wedding.id, user_id: userId, role: 'owner' }]);
-      if (mErr) throw mErr;
-
-      await setWeddingId(wedding.id);
+      await setWeddingId(weddingId);
       Alert.alert('Wedding created');
     } catch (e: any) {
       Alert.alert('Error', e.message || 'Failed to create');
