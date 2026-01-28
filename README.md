@@ -5,6 +5,11 @@
 
 Mobile-first Expo app for wedding planning (EU-ready) with Supabase backend.
 
+## Tech stack
+- Expo SDK 54 + React Native
+- Supabase (Auth, Postgres, Storage)
+- React Navigation
+
 ## Setup
 1. Create a Supabase project in an EU region (e.g., Frankfurt).
 2. In Project Settings -> API, copy the Project URL and anon key.
@@ -33,6 +38,11 @@ npx eas-cli build --platform android --profile development
 npx expo start --dev-client --clear
 ```
 
+## Scripts
+- `npx expo start` - start dev server
+- `npx expo start --dev-client` - start dev client server
+- `npx eas-cli build --platform android --profile development` - build dev client
+
 ## Screens
 - Auth (email OTP)
 - Dashboard, Guests, Tasks, Vendors
@@ -50,3 +60,14 @@ npx expo start --dev-client --clear
 - On the Guests tab, add a guest with name (email/phone optional).
 - Tap Edit to modify, Delete to remove.
 - Data is scoped per current wedding and protected by RLS policies.
+
+## Roadmap
+- Wedding roles and access codes UI
+- Guests RSVP portal
+- Tasks with assignees and status
+- Vendors and bookings
+- Seating chart and timeline
+
+## Contributing
+- Use `.env.example` for local setup.
+- Do not commit real keys or secrets.
