@@ -1,4 +1,7 @@
-﻿# FirstWedApp Mobile
+# FirstWedApp Mobile
+
+![Expo](https://img.shields.io/badge/expo-54.0.31-000?logo=expo)
+![Platforms](https://img.shields.io/badge/platform-android%20%7C%20ios-blue)
 
 Mobile-first Expo app for wedding planning (EU-ready) with Supabase backend.
 
@@ -21,6 +24,14 @@ EXPO_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
 npx expo start
 ```
 - Scan the QR with Expo Go. Use LAN or Tunnel if needed.
+
+## Development build (recommended)
+- Builds a custom dev client so native versions always match.
+```
+npx expo install expo-dev-client
+npx eas-cli build --platform android --profile development
+npx expo start --dev-client --clear
+```
 
 ## Screens
 - Auth (email OTP)
