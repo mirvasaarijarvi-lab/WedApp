@@ -13,7 +13,7 @@ import { useTheme } from '../theme/theme';
 
 export default function DashboardScreen() {
   const { colors, spacing, typography } = useTheme();
-  const { weddingId } = useWedding();
+  const { weddingId, setWeddingId } = useWedding();
   const navigation = useNavigation<any>();
   const styles = useMemo(
     () =>
@@ -290,12 +290,16 @@ export default function DashboardScreen() {
         footer: {
           alignItems: 'center',
           paddingBottom: spacing.xl,
+          gap: spacing.sm,
         },
       }),
     [colors, spacing, typography]
   );
   const signOut = async () => {
     await supabase.auth.signOut();
+  };
+  const switchWedding = async () => {
+    await setWeddingId(null);
   };
   const [event, setEvent] = useState({
     title: 'Ceremony & Reception',
@@ -850,6 +854,7 @@ export default function DashboardScreen() {
       </Card>
 
       <View style={styles.footer}>
+        <AppButton title="Switch wedding" variant="outline" onPress={switchWedding} />
         <AppButton title="Sign out" variant="ghost" onPress={signOut} />
       </View>
     </ScrollView>
