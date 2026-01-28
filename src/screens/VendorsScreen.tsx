@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import AppButton from '../components/AppButton';
 import Card from '../components/Card';
 import EmptyState from '../components/EmptyState';
+import FeatureIcon from '../components/FeatureIcon';
 import SectionTitle from '../components/SectionTitle';
 import { useTheme } from '../theme/theme';
 
@@ -17,6 +18,12 @@ export default function VendorsScreen() {
           backgroundColor: colors.background,
         },
         header: {
+          marginBottom: spacing.sm,
+        },
+        headerRow: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           marginBottom: spacing.sm,
         },
         subtitle: {
@@ -48,13 +55,17 @@ export default function VendorsScreen() {
   );
   return (
     <View style={styles.container}>
-      <SectionTitle style={styles.header}>Vendors</SectionTitle>
+      <View style={styles.headerRow}>
+        <SectionTitle>Vendors</SectionTitle>
+        <FeatureIcon name="vendors" />
+      </View>
       <Text style={styles.subtitle}>Curate your team with a calm, premium planner view.</Text>
 
       <EmptyState
         title="No vendors yet"
         description="Add venues, suppliers, and trusted partners to your wedding team."
         actionLabel="Add vendor"
+        illustration="bouquet"
       />
 
       <Card style={styles.card}>

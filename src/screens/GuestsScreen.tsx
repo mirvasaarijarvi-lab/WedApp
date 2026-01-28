@@ -5,6 +5,7 @@ import { useWedding } from '../lib/WeddingContext';
 import AppButton from '../components/AppButton';
 import Card from '../components/Card';
 import EmptyState from '../components/EmptyState';
+import FeatureIcon from '../components/FeatureIcon';
 import SectionTitle from '../components/SectionTitle';
 import { useTheme } from '../theme/theme';
 
@@ -28,6 +29,12 @@ export default function GuestsScreen() {
           backgroundColor: colors.background,
         },
         header: {
+          marginBottom: spacing.lg,
+        },
+        headerRow: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           marginBottom: spacing.lg,
         },
         form: {
@@ -185,6 +192,7 @@ export default function GuestsScreen() {
         <EmptyState
           title="No wedding selected"
           description="Select or create a wedding first to manage guests."
+          illustration="rings"
         />
       </View>
     );
@@ -192,7 +200,10 @@ export default function GuestsScreen() {
 
   return (
     <View style={styles.container}>
-      <SectionTitle style={styles.header}>Guests</SectionTitle>
+      <View style={styles.headerRow}>
+        <SectionTitle>Guests</SectionTitle>
+        <FeatureIcon name="guests" />
+      </View>
 
       <Card style={styles.form}>
         <TextInput
@@ -247,6 +258,7 @@ export default function GuestsScreen() {
           <EmptyState
             title="No guests yet"
             description="Start adding guests and track RSVPs with a calm, elegant view."
+            illustration="calendar"
           />
         }
       />

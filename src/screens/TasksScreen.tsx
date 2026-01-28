@@ -6,6 +6,7 @@ import AppButton from '../components/AppButton';
 import Badge from '../components/Badge';
 import Card from '../components/Card';
 import EmptyState from '../components/EmptyState';
+import FeatureIcon from '../components/FeatureIcon';
 import SectionTitle from '../components/SectionTitle';
 import { useTheme } from '../theme/theme';
 
@@ -30,6 +31,12 @@ export default function TasksScreen() {
           backgroundColor: colors.background,
         },
         header: {
+          marginBottom: spacing.lg,
+        },
+        headerRow: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           marginBottom: spacing.lg,
         },
         form: {
@@ -175,6 +182,7 @@ export default function TasksScreen() {
         <EmptyState
           title="No wedding selected"
           description="Select or create a wedding first to manage tasks."
+          illustration="rings"
         />
       </View>
     );
@@ -182,7 +190,10 @@ export default function TasksScreen() {
 
   return (
     <View style={styles.container}>
-      <SectionTitle style={styles.header}>Tasks</SectionTitle>
+      <View style={styles.headerRow}>
+        <SectionTitle>Tasks</SectionTitle>
+        <FeatureIcon name="tasks" />
+      </View>
 
       <Card style={styles.form}>
         <TextInput
@@ -252,6 +263,7 @@ export default function TasksScreen() {
           <EmptyState
             title="No tasks yet"
             description="Add your first planning task and track it as ready."
+            illustration="calendar"
           />
         }
       />

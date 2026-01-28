@@ -82,10 +82,17 @@ export default function DashboardScreen() {
           gap: spacing.sm,
           marginBottom: spacing.sm,
         },
-        focusText: {
-          fontFamily: typography.body,
-          color: colors.text,
+        focusTextWrap: {
           flex: 1,
+        },
+        focusTitle: {
+          fontFamily: typography.bodyMedium,
+          color: colors.text,
+        },
+        focusMeta: {
+          fontFamily: typography.body,
+          color: colors.muted,
+          fontSize: 12,
         },
         eventTitle: {
           fontFamily: typography.heading,
@@ -109,11 +116,6 @@ export default function DashboardScreen() {
           flexDirection: 'row',
           gap: spacing.sm,
           flexWrap: 'wrap',
-        },
-        sampleText: {
-          fontFamily: typography.body,
-          color: colors.muted,
-          marginBottom: spacing.md,
         },
         footer: {
           alignItems: 'center',
@@ -179,16 +181,25 @@ export default function DashboardScreen() {
       <SectionTitle style={styles.sectionTitle}>Today's Focus</SectionTitle>
       <Card>
         <View style={styles.focusItem}>
-          <Badge label="Vendor" tone="accent" />
-          <Text style={styles.focusText}>Confirm florist delivery window</Text>
+          <FeatureIcon name="vendors" size={32} />
+          <View style={styles.focusTextWrap}>
+            <Text style={styles.focusTitle}>Confirm florist delivery window</Text>
+            <Text style={styles.focusMeta}>Vendor · Due in 2 days</Text>
+          </View>
         </View>
         <View style={styles.focusItem}>
-          <Badge label="Guests" tone="primary" />
-          <Text style={styles.focusText}>Send RSVP reminder to undecided guests</Text>
+          <FeatureIcon name="guests" size={32} />
+          <View style={styles.focusTextWrap}>
+            <Text style={styles.focusTitle}>Send RSVP reminder</Text>
+            <Text style={styles.focusMeta}>Guests · 18 awaiting</Text>
+          </View>
         </View>
         <View style={styles.focusItem}>
-          <Badge label="Venue" tone="muted" />
-          <Text style={styles.focusText}>Finalize seating layout with coordinator</Text>
+          <FeatureIcon name="timeline" size={32} />
+          <View style={styles.focusTextWrap}>
+            <Text style={styles.focusTitle}>Finalize seating layout</Text>
+            <Text style={styles.focusMeta}>Venue · In review</Text>
+          </View>
         </View>
       </Card>
 
@@ -202,18 +213,6 @@ export default function DashboardScreen() {
         <View style={styles.eventActions}>
           <AppButton title="View timeline" variant="secondary" />
           <AppButton title="Send update" variant="outline" />
-        </View>
-      </Card>
-
-      <SectionTitle style={styles.sectionTitle}>Component Samples</SectionTitle>
-      <Card>
-        <Text style={styles.sampleText}>
-          Primary, accent, and outline buttons with generous spacing.
-        </Text>
-        <View style={styles.eventActions}>
-          <AppButton title="Primary" variant="primary" />
-          <AppButton title="Accent" variant="secondary" />
-          <AppButton title="Outline" variant="outline" />
         </View>
       </Card>
 

@@ -9,9 +9,10 @@ type Props = {
   description: string;
   actionLabel?: string;
   onAction?: () => void;
+  illustration?: 'rings' | 'calendar' | 'bouquet';
 };
 
-export default function EmptyState({ title, description, actionLabel, onAction }: Props) {
+export default function EmptyState({ title, description, actionLabel, onAction, illustration }: Props) {
   const { colors, spacing, typography } = useTheme();
   const styles = useMemo(
     () =>
@@ -37,7 +38,7 @@ export default function EmptyState({ title, description, actionLabel, onAction }
   );
   return (
     <View style={styles.container}>
-      <EmptyIllustration size={96} />
+      <EmptyIllustration size={96} variant={illustration} />
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.description}>{description}</Text>
       {actionLabel ? <AppButton title={actionLabel} variant="outline" onPress={onAction} /> : null}
