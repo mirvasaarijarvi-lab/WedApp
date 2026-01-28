@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
 import { supabase } from '../lib/supabase';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -12,6 +12,7 @@ type Props = NativeStackScreenProps<AuthStackParamList, 'Auth'>;
 
 export default function AuthScreen({ navigation }: Props) {
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   const sendCode = async () => {
@@ -24,6 +25,19 @@ export default function AuthScreen({ navigation }: Props) {
       navigation.navigate('Verify', { email });
     } catch (e: any) {
       Alert.alert('Error', e.message || 'Failed to send code');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signInWithPassword = async () => {
+    if (!email || !password) return;
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+    } catch (e: any) {
+      Alert.alert('Error', e.message || 'Failed to sign in');
     } finally {
       setLoading(false);
     }
@@ -42,7 +56,20 @@ export default function AuthScreen({ navigation }: Props) {
         onChangeText={setEmail}
         style={{ borderWidth: 1, borderColor: '#ccc', padding: 12, borderRadius: 8 }}
       />
-      <Button title={loading ? 'Sendingâ€¦' : 'Send code'} onPress={sendCode} disabled={loading || !email} />
+      <TextInput
+        autoCapitalize="none"
+        secureTextEntry
+        placeholder="Password (optional)"
+        value={password}
+        onChangeText={setPassword}
+        style={{ borderWidth: 1, borderColor: '#ccc', padding: 12, borderRadius: 8 }}
+      />
+      <Button title={loading ? 'Sending...' : 'Send code'} onPress={sendCode} disabled={loading || !email} />
+      <Button
+        title={loading ? 'Signing in...' : 'Sign in with password'}
+        onPress={signInWithPassword}
+        disabled={loading || !email || !password}
+      />
     </View>
   );
 }

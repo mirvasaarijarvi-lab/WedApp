@@ -328,9 +328,43 @@ export default function DashboardScreen() {
     const parsed = new Date(value);
     if (Number.isNaN(parsed.getTime())) return null;
     return {
-      date: parsed.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }),
-      time: parsed.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
+      date: `${String(parsed.getDate()).padStart(2, '0')}${String(parsed.getMonth() + 1).padStart(2, '0')}${parsed.getFullYear()}`,
+      time: `${String(parsed.getHours()).padStart(2, '0')}${String(parsed.getMinutes()).padStart(2, '0')}`,
     };
+  };
+
+  const parseDateInput = (value: string) => {
+    const digits = value.replace(/\D/g, '');
+    if (digits.length !== 8) return null;
+    const day = digits.slice(0, 2);
+    const month = digits.slice(2, 4);
+    const year = digits.slice(4, 8);
+    const isoDate = `${year}-${month}-${day}`;
+    const parsed = new Date(isoDate);
+    if (Number.isNaN(parsed.getTime())) return null;
+    return isoDate;
+  };
+
+  const parseTimeInput = (value: string) => {
+    const digits = value.replace(/\D/g, '');
+    if (digits.length !== 4) return null;
+    const hours = digits.slice(0, 2);
+    const minutes = digits.slice(2, 4);
+    return { hours, minutes };
+  };
+
+  const formatDisplayDate = (value: string) => {
+    const iso = parseDateInput(value);
+    if (!iso) return value;
+    const parsed = new Date(iso);
+    return parsed.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  };
+
+  const formatDisplayTime = (value: string) => {
+    const time = parseTimeInput(value);
+    if (!time) return value;
+    const parsed = new Date(`2000-01-01T${time.hours}:${time.minutes}:00`);
+    return parsed.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
   };
 
   const loadEvent = async () => {
@@ -349,8 +383,8 @@ export default function DashboardScreen() {
       setEventId(data.id);
       setEvent({
         title: data.title || 'Upcoming Event',
-        date: parts?.date || 'Date not set',
-        time: parts?.time || 'Time not set',
+        date: parts?.date || '',
+        time: parts?.time || '',
         location: data.location || 'Location not set',
         description: data.notes || '',
       });
@@ -461,9 +495,15 @@ export default function DashboardScreen() {
       Alert.alert('No wedding selected', 'Select a wedding before editing event details.');
       return;
     }
-    const parsed = new Date(`${draftEvent.date} ${draftEvent.time}`);
+    const isoDate = parseDateInput(draftEvent.date);
+    const time = parseTimeInput(draftEvent.time);
+    if (!isoDate || !time) {
+      Alert.alert('Invalid date/time', 'Use DDMMYYYY and HHMM.');
+      return;
+    }
+    const parsed = new Date(`${isoDate}T${time.hours}:${time.minutes}:00`);
     if (Number.isNaN(parsed.getTime())) {
-      Alert.alert('Invalid date/time', 'Please enter a valid date and time.');
+      Alert.alert('Invalid date/time', 'Use DDMMYYYY and HHMM.');
       return;
     }
     setIsSavingEvent(true);
@@ -498,7 +538,7 @@ export default function DashboardScreen() {
       setIsSavingEvent(false);
     }
   };
-  const eventMetaLine = `${event.date} · ${event.time} · ${event.location}`;
+  const eventMetaLine = `${formatDisplayDate(event.date)} · ${formatDisplayTime(event.time)} · ${event.location}`;
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.header}>
@@ -724,13 +764,15 @@ export default function DashboardScreen() {
               value={draftEvent.date}
               onChangeText={(date) => setDraftEvent((prev) => ({ ...prev, date }))}
               style={styles.input}
-              placeholder="Date"
+              placeholder="Date (DDMMYYYY)"
+              inputMode="numeric"
             />
             <TextInput
               value={draftEvent.time}
               onChangeText={(time) => setDraftEvent((prev) => ({ ...prev, time }))}
               style={styles.input}
-              placeholder="Time"
+              placeholder="Time (HHMM)"
+              inputMode="numeric"
             />
             <TextInput
               value={draftEvent.location}

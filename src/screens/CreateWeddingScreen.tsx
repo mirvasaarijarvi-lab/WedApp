@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
 import { supabase } from '../lib/supabase';
 import { useWedding } from '../lib/WeddingContext';
@@ -11,6 +11,19 @@ export default function CreateWeddingScreen() {
   const [venue, setVenue] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const parseDateInput = (value: string) => {
+    if (!value) return null;
+    const digits = value.replace(/\D/g, '');
+    if (digits.length !== 8) return null;
+    const day = digits.slice(0, 2);
+    const month = digits.slice(2, 4);
+    const year = digits.slice(4, 8);
+    const iso = `${year}-${month}-${day}`;
+    const parsed = new Date(iso);
+    if (Number.isNaN(parsed.getTime())) return null;
+    return iso;
+  };
+
   const onCreate = async () => {
     try {
       setLoading(true);
@@ -18,9 +31,12 @@ export default function CreateWeddingScreen() {
       const userId = (session as Session | null)?.user?.id;
       if (!userId) throw new Error('No user');
 
+      const parsedDate = parseDateInput(date);
+      if (date && !parsedDate) throw new Error('Date must be DDMMYYYY');
+
       const { data: wedding, error: wErr } = await supabase
         .from('weddings')
-        .insert([{ title, date: date || null, venue: venue || null }])
+        .insert([{ title, date: parsedDate, venue: venue || null }])
         .select()
         .single();
       if (wErr) throw wErr;
@@ -43,7 +59,13 @@ export default function CreateWeddingScreen() {
     <View style={{ flex: 1, padding: 24, gap: 12 }}>
       <Text style={{ fontSize: 24, fontWeight: '600' }}>Create wedding</Text>
       <TextInput placeholder="Title" value={title} onChangeText={setTitle} style={{ borderWidth: 1, borderColor: '#ccc', padding: 12, borderRadius: 8 }} />
-      <TextInput placeholder="Date (YYYY-MM-DD)" value={date} onChangeText={setDate} style={{ borderWidth: 1, borderColor: '#ccc', padding: 12, borderRadius: 8 }} />
+      <TextInput
+        placeholder="Date (DDMMYYYY)"
+        value={date}
+        onChangeText={setDate}
+        inputMode="numeric"
+        style={{ borderWidth: 1, borderColor: '#ccc', padding: 12, borderRadius: 8 }}
+      />
       <TextInput placeholder="Venue" value={venue} onChangeText={setVenue} style={{ borderWidth: 1, borderColor: '#ccc', padding: 12, borderRadius: 8 }} />
       <Button title={loading ? 'Creatingâ€¦' : 'Create'} onPress={onCreate} disabled={loading || !title} />
     </View>
